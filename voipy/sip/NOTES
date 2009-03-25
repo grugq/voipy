@@ -1,0 +1,85 @@
+
+
+- Create a parser generator language for descibing packet header fields. Most of
+the parser should be done in either pyParsing or in an internal parsing core
+
+The parser generator can take a definition of value headers and create a python source file, or a dynamic object (for runtime updates).
+
+Values =>
+    provide a simple language for declaring how Values are structured and build
+
+something that could automatically generate the values.py file
+
+same with header.py, which should be completely automatically generated
+
+##############################################
+- Provide iteration functionality for single headers to allow cleaner code
+Update: actually, should be for values as well, since they can be lists..
+
+Header.__iter__(self):
+	class HeaderIter(object):
+		def __init__(self, header):
+			self.header = header
+		def next(self):
+			yield self.header
+			raise StopIteration
+	return HeaderIter(self)
+
+This will allow the user to do the following, regardless of whether the header 
+is part of a sequence or not
+
+	for contact in msg.contacts:
+		do_something( contact )
+
+####################################################
+header.__setattr__(self, name, value):
+	self.params += parameter(name, value)
+
+#########################################################
+
+
+lazy parsing for header values.
+
+header.get_value():
+	value = self.parse()
+	self.get_value = value  # the overwriting accessor trick 
+
+simplify the whole system, a packet is simply:
+	startline := object
+	headers := dict
+	body := object
+
+	header is simply:
+		name := str()
+		value := object # type specific elements
+	value is:
+		params := {}
+# Don't support comma seperated header lists, or creating extended line headers
+# don't support hname normalisation
+
+
+##############################################
+
+
+a header is a list of at least one value object. if the header is accessed directly
+the default value is modified/accessed (e.g. msg['to'].uri is privately mapped to
+msg.headers['to'].values[0].uri ... )
+
+a header has a default key, which is the normalized hname, however it also has a
+print name, which is what is used when building the packet.
+
+#########################################################################
+
+add a netio section to the voipy/ directory which stores the UDP reactor code,
+this will be used to create a simple asynch IO implementation for use on all
+platforms (e.g. something safer than asyncore)
+
+create a generic statemachine object so that we can develop a good robust stack
+<todo version="0.1.19">
+    <note priority="veryhigh" time="1153292905">
+        URI parser is broken, fix it
+    </note>
+    <note priority="veryhigh" time="1153292921">
+        VIA parser is broken, fix it
+    </note>
+</todo>

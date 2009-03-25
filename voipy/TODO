@@ -1,0 +1,11 @@
+move symbolicList, Table code into lib.py
+
+address core parsing capabilities within utils 
+	quoted split
+
+ParseBuf
+    readline()
+    readlines()
+    get_cmdline()
+    get_headers()
+    get_body()

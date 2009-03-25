@@ -1,0 +1,8 @@
+text message parsing core
+	- sip
+	- sdp
+	- mgcp
+
+binary message parsing core
+	- sccp
+	- rtp

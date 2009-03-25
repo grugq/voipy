@@ -1,0 +1,10 @@
+#!/bin/sh
+
+BASE="http://www.ietf.org/rfc/"
+
+RFCS=$*
+
+for RFC in $RFCS
+do
+	wget "$BASE/rfc${RFC}.txt"
+done

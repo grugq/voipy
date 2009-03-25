@@ -1,0 +1,6 @@
+
+
+message.py:
+    header_table => more like a real dict()
+    Message() => review arguements
+

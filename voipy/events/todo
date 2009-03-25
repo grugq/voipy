@@ -1,0 +1,19 @@
+
+events.py
+    import asyncore
+
+    class Channel(asyncore.dispatcher):
+        ...
+
+    class UDPChannel()
+    class TCPChannel()
+    class TLSChannel()
+    class PCAPChannel()
+
+    def run()
+        asyncore.run()
+
+__init__.py
+    from events import run
+    def Channel(typ, *args, **kwargs):
+        factory

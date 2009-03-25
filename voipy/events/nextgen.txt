@@ -1,0 +1,15 @@
+from voipy import events
+
+server = events.channel('udp', listen=('0.0.0.0', 5060), handler=sip_handler)
+
+events.run()
+
+events.py => event engine and channel base class
+channels.py => UDP, TCP, SSL and PCAP channel implementations
+useragent.py => sip handler, UA, UAC, UAS
+
+either we collect all the channel objects into one location (here) and implement our
+own factory, or we have to use a factory object in the core event engine. The engine
+should create new channels and register them for loop.
+
+A Channel is an interface into network stream. It is possible to have multiple channels with just a single handler.
