@@ -6,6 +6,7 @@
 
 import asyncore
 import socket
+import errno
 import time
 
 
