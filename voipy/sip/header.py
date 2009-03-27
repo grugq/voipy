@@ -28,12 +28,11 @@ class HeaderBase(sip.SIPObject):
             self.values.append( self._vclass(*args, **kwargs) )
 
     def _loadargs(self, *args, **kwargs):
-        if kwargs and 'params' in kwargs:
-            self.values[0].params.update(kwargs['params'])
-            del kwargs['params']
+        if kwargs and self.values:
+            self.values[0].params.update(kwargs)
 
-        if args or kwargs:
-            self.values.append( self._vclass(*args, **kwargs) )
+        #if args or kwargs:
+            #    self.values.append( self._vclass(*args, **kwargs) )
 
     def parse(self, buf):
         for hv in utils.qsplit(buf, self.sep):
