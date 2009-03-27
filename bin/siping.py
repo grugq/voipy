@@ -203,7 +203,7 @@ class OptionsPing(Siping):
                 amsg = self.build_msg()
                 amsg.headers['call-id'].value = msg.headers['call-id'].value
                 amsg += sip.utils.make_authorisation(
-                        msg.headers['www-authenticate'], amsg.request.method,
+                        msg.headers['www-authenticate'], amsg.method,
                         str(amsg.request.uri),
                         self.config.username, self.config.passwd
                         )
