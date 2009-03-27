@@ -250,6 +250,9 @@ class RegisterPing(Siping):
     def __init__(self, *args, **kwargs):
         super(RegisterPing, self).__init__(*args, **kwargs)
 
+    def on_connect(self, channel):
+        self.state = 'unauth'
+
     def writable(self, channel):
         return self.state in ('unauth', 'auth')
 
@@ -258,17 +261,14 @@ class RegisterPing(Siping):
             msg = self.build_msg()
             self.sendmsg(msg)
 
-    def on_connect(self, channel):
-        self.state = 'unauth'
-
     def recvmsg(self, msg, addr):
         super(RegisterPing, self).recvmsg(msg, addr)
         if msg.response.code in (401,404,407) and \
                 'www-authenticate' in msg.headers:
             authmsg = sip.request.RegisterAuthorisation( msg, self.config.username,
                     self.config.passwd)
-            self.sendmsg(authmsg)
             self.state = 'waiting'
+            self.sendmsg(authmsg)
         else:
             self.close()
 
