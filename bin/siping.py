@@ -203,7 +203,7 @@ class OptionsPing(Siping):
                 amsg = self.build_msg()
                 amsg.headers['call-id'].value = msg.headers['call-id'].value
                 amsg += sip.utils.make_authorisation(
-                        msg.headers['www-authenticate'], amsg.method,
+                        msg.headers['www-authenticate'], amsg.request.method,
                         str(amsg.request.uri),
                         self.config.username, self.config.passwd
                         )
@@ -249,14 +249,17 @@ class TracerPing(Siping):
 class RegisterPing(Siping):
     def __init__(self, *args, **kwargs):
         super(RegisterPing, self).__init__(*args, **kwargs)
-        self.state = 'unauth'
 
     def writable(self, channel):
         return self.state in ('unauth', 'auth')
 
+    def on_write(self, channel):
+        if self.state == 'unauth':
+            msg = self.build_msg()
+            self.sendmsg(msg)
+
     def on_connect(self, channel):
-        msg = self.build_msg()
-        self.sendmsg(msg)
+        self.state = 'unauth'
 
     def recvmsg(self, msg, addr):
         super(RegisterPing, self).recvmsg(msg, addr)
@@ -265,6 +268,7 @@ class RegisterPing(Siping):
             authmsg = sip.request.RegisterAuthorisation( msg, self.config.username,
                     self.config.passwd)
             self.sendmsg(authmsg)
+            self.state = 'waiting'
         else:
             self.close()
 
@@ -337,7 +341,7 @@ def main():
 
     if not config.proto:
         config.proto = 'udp'
-    config.register = False
+    #config.register = False
 
     if config.traceroute:
         pinger = TracerPing(config)
